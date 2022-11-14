@@ -11,10 +11,10 @@ export class NewsItem extends Component {
         <div className="card" style={{width: "18rem"}}>
           <img src={imgUrl} style={{width: "100%", height:"150px"}}className="card-img-top" alt="..."/>
           <div className="card-body">
-            <h5 className="card-title">{title.slice(0,80)}...</h5>
-            <p className="card-text">{description.slice(0,88)}...</p>
+            <h5 className="card-title">{title?title.slice(0,80):""}...</h5>
+            <p className="card-text">{description?description.slice(0,88):""}...</p>
             {/* target = "_blank"  is used for opening the content in new tab*/}
-            <a href={newsUrl} target="_blank"className="btn btn-sm btn-primary">Go somewhere</a>
+            <a href={newsUrl} target="_blank" className="btn btn-sm btn-dark">Go somewhere</a>
           </div>
         </div>
       </div>
