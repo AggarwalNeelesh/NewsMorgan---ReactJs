@@ -1,8 +1,19 @@
 import React, { Component } from "react";
 import NewsItem from "./NewsItem";
 import Spinner from "./Spinner";
+import PropTypes from 'prop-types'
 
 export class News extends Component {
+  static defaultProps = {
+    country: "in",
+    pageSize : 8,
+    category: "general"
+  }
+  static propTypes = {
+    country: PropTypes.string,
+    pageSize: PropTypes.number, // Number of items displayed per page
+    category: PropTypes.string,
+  }
   constructor(props) {
     // Always call super()
     super();
@@ -12,14 +23,14 @@ export class News extends Component {
       // As when we fetch articles from url only few articles are shown
       // rest are shown in next page
       page: 1,
-      pageSize: props.pageSize, // Number of items displayed per page
+      pageSize: props.pageSize,
     };
   }
   // It is lifecycle method and it runs after the render method
   // async method is used for synchronization
   async componentDidMount() {
     this.setState({ loading: true });
-    let url = `https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=720434ac23664ab197957d1eaca906ba&pagesize=${this.state.pageSize}`;
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=720434ac23664ab197957d1eaca906ba&pagesize=${this.props.pageSize}`;
     // Fetch API is used to fetch data from the url
     let data = await fetch(url); // await will help  us to wait until data is loaded completely
     // now the data is compeletely loaded
@@ -34,13 +45,13 @@ export class News extends Component {
   // Function for Next button to display news items for next page
   handleNextClick = async () => {
     if (
-      Math.ceil(this.state.totalResults / this.state.pageSize) > this.state.page
+      Math.ceil(this.state.totalResults / this.props.pageSize) > this.state.page
     ) {
       this.setState({ loading: true });
       // &pageSize => number of articles we want to dispaly in page
       // &page => The page in which we are currently in.
-      let url = `https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=720434ac23664ab197957d1eaca906ba&pagesize=${
-        this.state.pageSize
+      let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=720434ac23664ab197957d1eaca906ba&pagesize=${
+        this.props.pageSize
       }&page=${this.state.page + 1}`;
       let data = await fetch(url);
       let parseData = await data.json();
@@ -55,8 +66,8 @@ export class News extends Component {
   // Function for Previous button to display news items for previous page
   handlePreviousClick = async () => {
     this.setState({ loading: true });
-    let url = `https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=720434ac23664ab197957d1eaca906ba&pagesize=${
-      this.state.pageSize
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=720434ac23664ab197957d1eaca906ba&pagesize=${
+      this.props.pageSize
     }&page=${this.state.page - 1}`;
     let data = await fetch(url);
     let parseData = await data.json();
@@ -87,7 +98,7 @@ export class News extends Component {
           </button>
           <button
             disabled={
-              this.state.totalResults / this.state.pageSize <= this.state.page
+              this.state.totalResults / this.props.pageSize <= this.state.page
             }
             type="button"
             className="btn btn-dark"
@@ -131,7 +142,7 @@ export class News extends Component {
           </button>
           <button
             disabled={
-              this.state.totalResults / this.state.pageSize <= this.state.page
+              this.state.totalResults / this.props.pageSize <= this.state.page
             }
             type="button"
             className="btn btn-dark"
